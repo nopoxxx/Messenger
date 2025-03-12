@@ -1,0 +1,11 @@
+.Messages {
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	height: 86vh;
+	padding-bottom: 8vh;
+}
+
+.Messages::-webkit-scrollbar {
+	display: none;
+}

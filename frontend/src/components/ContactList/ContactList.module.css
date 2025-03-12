@@ -1,0 +1,8 @@
+.ContactList {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background-color: #303030;
+	width: 18vw;
+	min-width: fit-content;
+}

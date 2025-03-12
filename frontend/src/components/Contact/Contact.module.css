@@ -1,0 +1,31 @@
+.Contact {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	min-height: fit-content;
+	height: 5vh;
+	padding: 1vh;
+}
+
+.avatar {
+	height: 80%;
+	aspect-ratio: 1 / 1;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-right: 1vh;
+}
+
+.text {
+	font-size: 1.5vh;
+}
+
+.email {
+	font-size: 1vh;
+	opacity: 0.5;
+}
+
+.Contact:hover {
+	background-color: #444;
+	cursor: pointer;
+}

@@ -1,0 +1,6 @@
+.Messenger {
+	display: flex;
+	flex-direction: column;
+	width: 70vw;
+	height: 96vh;
+}

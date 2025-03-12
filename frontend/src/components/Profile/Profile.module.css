@@ -1,0 +1,78 @@
+.Profile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 4vh 4vw;
+	background-color: #303030;
+	border-radius: 20px;
+}
+
+.Profile form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.Nickname {
+	display: flex;
+	font-size: 2vh;
+}
+
+.avatarUploader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.avatarLabel {
+	cursor: pointer;
+	display: inline-block;
+	overflow: hidden;
+	width: 100px;
+	height: 100px;
+	border: 2px solid #ccc;
+	transition: border-color 0.3s ease;
+}
+
+.avatarLabel:hover {
+	border-color: #007bff;
+}
+
+.avatar {
+	height: 100%;
+	aspect-ratio: 1 / 1;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-right: 1vh;
+}
+
+.avatarInput {
+	display: none;
+}
+
+.buttons {
+	display: flex;
+	align-items: center;
+	gap: 1vw;
+}
+
+.cancel {
+	background-color: #ff5f5f;
+	color: #fff;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background 0.2s ease-in-out;
+	font-size: 14px;
+	border-radius: 5px;
+	padding: 0 10px;
+	border: 0;
+	height: 38px;
+}
+
+.cancel:hover {
+	background-color: #ff7a7a;
+}

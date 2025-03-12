@@ -1,0 +1,24 @@
+.AuthPage {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 12vh;
+}
+
+.switchAuthType {
+	margin-top: 2vh;
+	color: rgb(70, 135, 255);
+	cursor: pointer;
+}
+
+@media (min-width: 768px) {
+	.AuthPage {
+		margin-top: 8vh;
+	}
+}
+
+@media (min-width: 1024px) {
+	.AuthPage {
+		margin-top: 6vh;
+	}
+}

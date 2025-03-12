@@ -1,0 +1,56 @@
+.MessengerInput {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 70vw;
+	min-height: fit-content;
+	font-size: 2.4vh;
+	bottom: 0;
+}
+
+.container {
+	width: 56vw;
+	min-height: 4vh;
+	max-height: 7vh;
+	padding: 1vh 10vw 1vh 1vw;
+	font-size: 2vh;
+	font-family: 'Nunito', serif;
+	border: none;
+	outline: none;
+	background-color: #303030;
+	color: white;
+	position: fixed;
+	bottom: 2vh;
+}
+
+textarea {
+	width: 100%;
+	min-height: 4vh;
+	max-height: 7vh;
+	overflow-y: auto;
+	resize: none;
+	font-size: 2vh;
+	font-family: 'Nunito', serif;
+	border: none;
+	outline: none;
+	background-color: #303030;
+	color: white;
+}
+
+textarea::-webkit-scrollbar {
+	display: none;
+}
+
+.sendButton {
+	filter: invert(100%);
+	color: white;
+	cursor: pointer;
+	height: 8vh;
+	right: 1vw;
+	bottom: 0.1vh;
+	position: absolute;
+}
+
+.send-button:hover {
+	background: #0056b3;
+}
