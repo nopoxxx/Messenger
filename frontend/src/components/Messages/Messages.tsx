@@ -5,7 +5,6 @@ import classes from './Messages.module.css'
 
 const messages = Array.from({ length: 100 }, (_, i) => {
 	const authorId = Math.random() < 0.5 ? 1 : 2
-	console.log(authorId)
 	const recipientId = authorId === 1 ? 2 : 1
 	return {
 		id: i + 1,
@@ -30,7 +29,7 @@ export function Messages() {
 	return (
 		<div className={classes.Messages}>
 			{messages.map(message => (
-				<Message {...message} />
+				<Message key={message.id} {...message} />
 			))}
 			<div ref={messagesEndRef} />
 		</div>

@@ -24,7 +24,7 @@ class User
     public function findByNickname($nickname)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE nickname = ?");
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$nickname]);
             $result = $stmt->fetch();
             return ["status" => "ok", "desc" => $result];
@@ -50,7 +50,7 @@ class User
             return ["status" => "error", "desc" => "Пользователь с таким email уже зарегистрирован"];
         }
 
-        $userByNickname = $this->findByNickname($nickname);
+        $userByNickname = $this->findByNickname($username);
 
         if ($userByNickname["status"] === "error") {
             return ["status" => "error", "desc" => "Внутренняя ошибка сервера"];
