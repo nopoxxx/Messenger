@@ -40,6 +40,18 @@ class WebSocketServer implements MessageComponentInterface
             case 'deleteContact':
                 $this->deleteContact($conn, $data['contactId']);
                 break;
+            case 'sendMessage':
+                $this->sendMessage($conn, $data['receiverId'], $data['message']);
+                break;
+            case 'getChatMessages':
+                $this->getChatMessages($conn, $data['contactId']);
+                break;
+            case 'deleteMessage':
+                $this->deleteMessage($conn, $data['messageId']);
+                break;
+            case 'editMessage':
+                $this->editMessage($conn, $data['messageId'], $data['message']);
+                break;
         }
     }
 
@@ -204,7 +216,93 @@ class WebSocketServer implements MessageComponentInterface
         ]));
     }
 
+    private function sendMessage($conn, $receiverId, $message)
+    {
+        $userId = $this->clients[$conn->resourceId] ?? null;
+        if (!$userId) {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Неавторизованный запрос']));
+            return;
+        }
 
+        $query = "INSERT INTO messages (sender_id, receiver_id, message) VALUES (:senderId, :receiverId, :message)";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['senderId' => $userId, 'receiverId' => $receiverId, 'message' => $message]);
+
+        $messageId = $this->db->lastInsertId();
+        $sentAt = date('Y-m-d H:i:s');
+
+        if (isset($this->clients[$receiverId])) {
+            $this->clients[$receiverId]->send(json_encode([
+                'action' => 'newMessage',
+                'senderId' => $userId,
+                'receiverId' => $receiverId,
+                'message' => $message,
+                'sentAt' => $sentAt
+            ]));
+        }
+
+        $conn->send(json_encode([
+            'action' => 'messageSent',
+            'messageId' => $messageId,
+            'receiverId' => $receiverId,
+            'message' => $message,
+            'sentAt' => $sentAt
+        ]));
+    }
+
+    private function getChatMessages($conn, $contactId)
+    {
+        $userId = $this->clients[$conn->resourceId] ?? null;
+        if (!$userId) {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Неавторизованный запрос']));
+            return;
+        }
+
+        $query = "SELECT sender_id, receiver_id, message, sent_at FROM messages WHERE (sender_id = :userId AND receiver_id = :contactId) OR (sender_id = :contactId AND receiver_id = :userId) ORDER BY sent_at ASC";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['userId' => $userId, 'contactId' => $contactId]);
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $conn->send(json_encode(['action' => 'chatMessages', 'messages' => $messages]));
+    }
+
+    private function deleteMessage($conn, $messageId)
+    {
+        $userId = $this->clients[$conn->resourceId] ?? null;
+        if (!$userId) {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Неавторизованный запрос']));
+            return;
+        }
+
+        $query = "DELETE FROM messages WHERE id = :messageId AND sender_id = :userId";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['messageId' => $messageId, 'userId' => $userId]);
+
+        if ($stmt->rowCount() > 0) {
+            $conn->send(json_encode(['action' => 'messageDeleted', 'messageId' => $messageId]));
+        } else {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Сообщение не найдено или нет прав на удаление']));
+        }
+    }
+
+    private function editMessage($conn, $messageId, $newMessage)
+    {
+        $userId = $this->clients[$conn->resourceId] ?? null;
+        if (!$userId) {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Неавторизованный запрос']));
+            return;
+        }
+
+        $query = "UPDATE messages SET message = :message WHERE id = :messageId AND sender_id = :userId";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['message' => $newMessage, 'messageId' => $messageId, 'userId' => $userId]);
+
+        if ($stmt->rowCount() > 0) {
+            $conn->send(json_encode(['action' => 'messageEdited', 'messageId' => $messageId, 'message' => $newMessage]));
+        } else {
+            $conn->send(json_encode(['action' => 'error', 'message' => 'Сообщение не найдено или нет прав на редактирование']));
+        }
+    }
 
 
     public function onClose(ConnectionInterface $conn)
