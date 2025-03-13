@@ -21,6 +21,19 @@ class User
         }
     }
 
+    public function findByNickname($nickname)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE nickname = ?");
+            $stmt->execute([$nickname]);
+            $result = $stmt->fetch();
+            return ["status" => "ok", "desc" => $result];
+        } catch (PDOException $e) {
+            error_log("Ошибка User findByNickname: " . $e->getMessage());
+            return ["status" => "error", "desc" => "Внутренняя ошибка сервера"];
+        }
+    }
+
     public function create($email, $password, $is_email_visible, $username = null)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -35,6 +48,16 @@ class User
 
         if ($userByEmail["desc"] !== false) {
             return ["status" => "error", "desc" => "Пользователь с таким email уже зарегистрирован"];
+        }
+
+        $userByNickname = $this->findByNickname($nickname);
+
+        if ($userByNickname["status"] === "error") {
+            return ["status" => "error", "desc" => "Внутренняя ошибка сервера"];
+        }
+
+        if ($userByNickname["desc"] !== false) {
+            return ["status" => "error", "desc" => "Пользователь с таким nickname уже зарегистрирован"];
         }
 
         try {

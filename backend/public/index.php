@@ -64,6 +64,19 @@ switch ($mainPath) {
         }
         break;
 
+    case 'logout':
+        $controller = new AuthController($db);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $input = json_decode(file_get_contents("php://input"), true);
+            $token = $input['token'] ?? $_POST['token'] ?? null;
+
+            $controller->logout($token);
+        } else {
+            Response::send(["status" => "error", "desc" => "Запрещённый метод"], 405);
+        }
+        break;
+
     case 'verify-session':
         $controller = new AuthController($db);
 

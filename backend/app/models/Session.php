@@ -31,6 +31,20 @@ class Session
         }
     }
 
+    public function destroy($userId)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM sessions WHERE user_id = ?;");
+            $stmt->execute([$userId]);
+
+            return ["status" => "ok", "desc" => "Сессия завершена"];
+        } catch (PDOException $e) {
+            error_log("Ошибка Session destroy: " . $e->getMessage());
+            return ["status" => "error", "desc" => "Внутренняя ошибка сервера"];
+        }
+    }
+
+
     public function check($jwt)
     {
         $userId = $this->JwtService->verify($jwt);

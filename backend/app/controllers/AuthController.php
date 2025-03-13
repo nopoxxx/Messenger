@@ -68,4 +68,14 @@ class AuthController
         Response::send(["status" => "ok", "desc" => $session["desc"]]);
 
     }
+
+    public function logout($token)
+    {
+        $session = $this->sessionModel->destroy($token);
+        if ($session["status"] === "error") {
+            Response::send(["status" => "error", "desc" => $session["desc"]]);
+        }
+        Response::send(["status" => "ok", "desc" => $session["desc"]]);
+
+    }
 }
