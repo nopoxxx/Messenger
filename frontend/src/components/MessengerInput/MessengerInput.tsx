@@ -1,10 +1,12 @@
+import wsApi from '../../utils/websocketApi'
 //@ts-ignore
 import classes from './MessengerInput.module.css'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-function MessengerInput() {
+function MessengerInput(props: any) {
 	const [text, setText] = useState<string>('')
+	const [send, goSend] = useState<number>(0)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
 	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -16,8 +18,15 @@ function MessengerInput() {
 		}
 	}
 
+	useEffect(() => {
+		if (send !== 0) {
+			wsApi.sendMessage(props.contactId, text, false)
+			setText('')
+		}
+	}, [send])
+
 	const handleClick = () => {
-		alert('Кнопка нажата!')
+		goSend(send + 1)
 	}
 
 	return (

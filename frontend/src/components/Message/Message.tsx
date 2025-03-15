@@ -3,10 +3,12 @@ import classes from './Message.module.css'
 
 export function Message(props: any) {
 	return (
-		<div className={props.authorId === 1 ? classes.Message : classes.myMessage}>
-			<p>{props.authorId}</p>
-			<p>{props.text}</p>
-			<p>{props.date}</p>
+		<div
+			className={props.sender_id === 2 ? classes.myMessage : classes.Message}
+		>
+			<p>{props.sender_id}</p>
+			<p className={classes.messageText}>{props.message}</p>
+			<p>{props.sent_at}</p>
 		</div>
 	)
 }

@@ -6,6 +6,8 @@
 	height: fit-content;
 	width: fit-content;
 	margin: 0.5vh 2vw;
+	max-width: 32vw;
+	overflow-wrap: break-word;
 }
 
 .myMessage {
@@ -17,4 +19,6 @@
 	height: fit-content;
 	width: fit-content;
 	margin: 0.5vh 2vw;
+	max-width: 32vw;
+	overflow-wrap: break-word;
 }

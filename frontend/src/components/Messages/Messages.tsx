@@ -1,21 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import wsApi from '../../utils/websocketApi'
 import Message from '../Message/Message'
 //@ts-ignore
 import classes from './Messages.module.css'
 
-const messages = Array.from({ length: 100 }, (_, i) => {
-	const authorId = Math.random() < 0.5 ? 1 : 2
-	const recipientId = authorId === 1 ? 2 : 1
-	return {
-		id: i + 1,
-		text: `Сообщение ${i + 1}`,
-		date: new Date().toLocaleString(),
-		authorId,
-		recipientId,
-	}
-})
+export function Messages(props: any) {
+	const [messages, setMessages] = useState<any[]>([])
 
-export function Messages() {
 	const messagesEndRef = useRef<HTMLDivElement>(null)
 	const isFirstRender = useRef(true)
 
@@ -25,6 +16,30 @@ export function Messages() {
 		})
 		isFirstRender.current = false
 	}, [messages])
+
+	useEffect(() => {
+		wsApi.on('getChatMessages', data => {
+			if (Array.isArray(data)) {
+				setMessages(data)
+			} else {
+				setMessages([])
+			}
+		})
+	}, [])
+
+	useEffect(() => {
+		const handleNewMessage = (data: any) => {
+			if (data && typeof data === 'object') {
+				setMessages(prevMessages => [...prevMessages, data])
+				console.log(data)
+				console.log(messages)
+			} else {
+				console.error('sendMessages event returned invalid data:', data)
+			}
+		}
+
+		wsApi.on('messageSent', handleNewMessage)
+	}, [])
 
 	return (
 		<div className={classes.Messages}>

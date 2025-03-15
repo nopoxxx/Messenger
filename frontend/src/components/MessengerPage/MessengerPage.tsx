@@ -10,6 +10,8 @@ import classes from './MessengerPage.module.css'
 
 export function MessengerPage() {
 	const [sessionCheck, setSessionCheck] = useState<boolean | null>(null)
+	const [activeContact, setActiveContact] = useState<string | null>(null)
+	const [activeContactId, setActiveContactId] = useState<number | null>(null)
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -28,8 +30,11 @@ export function MessengerPage() {
 
 	return (
 		<div className={classes.MessengerPage}>
-			<ContactList />
-			<Messenger />
+			<ContactList
+				setContactId={setActiveContactId}
+				setContact={setActiveContact}
+			/>
+			<Messenger contactId={activeContactId} contact={activeContact} />
 			<SettingsList />
 		</div>
 	)

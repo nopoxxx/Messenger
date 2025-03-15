@@ -3,7 +3,7 @@ import classes from './Contact.module.css'
 
 export function Contact(props: any) {
 	return (
-		<li className={classes.Contact}>
+		<li onClick={props.onClick} className={classes.Contact}>
 			<div
 				className={classes.avatar}
 				style={{

@@ -65,10 +65,12 @@ class MessageController
 
             $conn->send(json_encode([
                 'action' => 'messageSent',
-                'messageId' => $messageId,
-                'receiverId' => $receiverId,
-                'message' => $message,
-                'sentAt' => $sentAt
+                'data' => [
+                    'receiver_id' => $receiverId,
+                    'sender_id' => $userId,
+                    'message' => $message,
+                    'sent_at' => $sentAt
+                ]
             ]));
         }
     }
@@ -99,9 +101,8 @@ class MessageController
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $conn->send(json_encode([
-            'action' => 'chatMessages',
-            'chatId' => $chatId,
-            'messages' => $messages
+            'action' => 'getChatMessages',
+            'data' => $messages
         ]));
     }
 

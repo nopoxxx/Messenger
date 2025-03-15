@@ -4,8 +4,9 @@ import Contact from '../Contact/Contact'
 //@ts-ignore
 import classes from './ContactList.module.css'
 
-export function ContactList() {
+export function ContactList(props: any) {
 	const [contacts, setContacts] = useState<any[]>([])
+	const [active, setActive] = useState<number>(0)
 
 	useEffect(() => {
 		wsApi.on('getUsers', data => {
@@ -20,10 +21,25 @@ export function ContactList() {
 		wsApi.getUsers()
 	}, [])
 
+	useEffect(() => {
+		wsApi.getChatMessages(active, false)
+	}, [active])
+
 	return (
 		<ul className={classes.ContactList}>
 			{contacts.map((contact: any) => (
-				<Contact key={contact.id} {...contact} />
+				<Contact
+					onClick={() => {
+						props.setContact(
+							contact.username ? contact.username : contact.email
+						)
+						props.setContactId(contact.id)
+						console.log(contact.id)
+						setActive(contact.id)
+					}}
+					key={contact.id}
+					{...contact}
+				/>
 			))}
 		</ul>
 	)
