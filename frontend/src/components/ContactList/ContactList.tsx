@@ -5,43 +5,25 @@ import Contact from '../Contact/Contact'
 import classes from './ContactList.module.css'
 
 export function ContactList() {
-	// const TEMP_Contacts = [
-	// 	{
-	// 		avatar: 'http://localhost/uploads/avatars/1.jpg',
-	// 		nickname: 'nopox',
-	// 		email: 'dmitriy.nopox@gmail.com',
-	// 	},
-	// 	{
-	// 		avatar: 'http://localhost/uploads/avatars/2.jpg',
-	// 		nickname: 'Test',
-	// 		email: '',
-	// 	},
-	// 	{
-	// 		avatar: 'http://localhost/uploads/avatars/3.png',
-	// 		nickname: '',
-	// 		email: 'tester@sf.ru',
-	// 	},
-	// 	{
-	// 		avatar: 'http://localhost/uploads/avatars/1.jpg',
-	// 		nickname: 'Яна',
-	// 		email: 'yana@mail.lv',
-	// 	},
-	// ]
-
-	const [contacts, setContacts] = useState([])
+	const [contacts, setContacts] = useState<any[]>([])
 
 	useEffect(() => {
-		wsApi.on('getUsers', data => setContacts(data)) // Подписываемся на событие
-		wsApi.getUsers() // Отправляем запрос
+		wsApi.on('getUsers', data => {
+			if (Array.isArray(data)) {
+				setContacts(data)
+			} else {
+				console.error('getUsers event returned non-array data:', data)
+				setContacts([])
+			}
+		})
+
+		wsApi.getUsers()
 	}, [])
 
 	return (
 		<ul className={classes.ContactList}>
 			{contacts.map((contact: any) => (
-				<Contact
-					key={contact.nickname ? contact.nickname : contact.email}
-					{...contact}
-				/>
+				<Contact key={contact.id} {...contact} />
 			))}
 		</ul>
 	)

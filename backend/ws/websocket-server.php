@@ -1,9 +1,22 @@
 <?php
 
+require 'vendor/autoload.php';
+
+require_once __DIR__ . '/../config/database.php';
+
 require_once 'controllers/MessageController.php';
 require_once 'controllers/UserController.php';
 require_once 'controllers/ContactController.php';
 require_once 'controllers/GroupController.php';
+
+use Ratchet\MessageComponentInterface;
+use Ratchet\ConnectionInterface;
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 class WebSocketServer implements MessageComponentInterface
 {
@@ -17,7 +30,7 @@ class WebSocketServer implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "Новое соединение ({$conn->resourceId})\n";
+        error_log("Новое соединение ({$conn->resourceId})\n");
     }
 
     public function onMessage(ConnectionInterface $conn, $msg)
@@ -29,10 +42,18 @@ class WebSocketServer implements MessageComponentInterface
 
         switch ($data['action']) {
             case 'auth':
+                error_log("Новая авторизация ({$conn->resourceId})\n");
                 UserController::auth($conn, $data['token'], $this->clients, $this->db);
                 break;
             case 'getUsers':
                 UserController::getUsers($conn, $this->clients, $this->db);
+                break;
+            case 'setProfile':
+                UserController::setProfile($conn, $data['avatar'], $data['username'], $data['isEmailVisible'], $this->clients, $this->db);
+                break;
+            case 'getProfile':
+                error_log("Запрос профиля ({$conn->resourceId})\n");
+                UserController::getProfile($conn, $this->clients, $this->db);
                 break;
             case 'getContacts':
                 ContactController::getContacts($conn, $this->clients, $this->db);

@@ -33,14 +33,7 @@ export function SettingsList() {
 			{profileOpen && (
 				<div className={classes.Modal}>
 					<div className={classes.ModalContent}>
-						<Profile
-							nickname='nopox'
-							onCancelChanges={() => setProfileOpen(false)}
-							onSubmitChanges={(e: any) => {
-								e.preventDefault()
-								setProfileOpen(false)
-							}}
-						/>
+						<Profile closeFunction={setProfileOpen} />
 					</div>
 				</div>
 			)}

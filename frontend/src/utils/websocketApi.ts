@@ -5,7 +5,7 @@ class WebSocketAPI {
 	constructor() {
 		this.socket = new WebSocket('ws://localhost:8080')
 
-		this.socket.onopen = () => console.log('WebSocket подключен')
+		this.socket.onopen = () => this.auth()
 		this.socket.onmessage = event => this.handleMessage(event)
 		this.socket.onclose = () => console.log('WebSocket отключен')
 		this.socket.onerror = error => console.error('WebSocket ошибка:', error)
@@ -34,36 +34,65 @@ class WebSocketAPI {
 			return
 		}
 
-		console.log(`📤 Отправляем сообщение в WebSocket:`, message)
 		this.socket.send(message)
 	}
 
-	public getContacts(userId: number) {
-		this.send('getContacts', { userId })
+	private auth(
+		token = document.cookie
+			.split('; ')
+			.find(row => row.startsWith('token='))
+			?.split('=')[1]
+	) {
+		this.send('auth', { token })
 	}
 
-	public addContact(userId: number, contactId: number) {
-		this.send('getContacts', { userId })
+	public setProfile(avatar: any, username: string, hideEmail: boolean) {
+		const isEmailVisible = !hideEmail
+		this.send('setProfile', { avatar, username, isEmailVisible })
+	}
+
+	public getContacts() {
+		this.send('getContacts')
+	}
+
+	public getProfile() {
+		this.send('getProfile')
+	}
+
+	public addContact(contactId: number) {
+		this.send('addContact', { contactId })
+	}
+
+	public deleteContact(contactId: number) {
+		this.send('deleteContact', { contactId })
 	}
 
 	public getUsers() {
-		this.socket.send(JSON.stringify({ action: 'getUsers' }))
+		this.send('getUsers')
 	}
 
-	public getChatMessages(userId: number, contactId: number) {
-		this.send('getChatMessages', { userId, contactId })
+	public getChatMessages(contactId: number, isGroup: boolean) {
+		this.send('getChatMessages', { contactId, isGroup })
 	}
 
-	public addNewMessage(senderId: number, receiverId: number, message: string) {
-		this.send('addNewMessage', { senderId, receiverId, message })
+	public sendMessage(receiverId: number, message: string, isGroup: boolean) {
+		this.send('sendMessage', { receiverId, message, isGroup })
 	}
 
-	public editMessage(messageId: number, senderId: number, newMessage: string) {
-		this.send('editMessage', { messageId, senderId, message: newMessage })
+	public editMessage(messageId: number, message: string) {
+		this.send('editMessage', { messageId, message })
 	}
 
-	public deleteMessage(messageId: number, senderId: number) {
-		this.send('deleteMessage', { messageId, senderId })
+	public deleteMessage(messageId: number) {
+		this.send('deleteMessage', { messageId })
+	}
+
+	public createGroup(groupName: string) {
+		this.send('createGroup', { groupName })
+	}
+
+	public addGroupMember(groupId: number, memberId: number) {
+		this.send('addGroupMember', { groupId, memberId })
 	}
 }
 

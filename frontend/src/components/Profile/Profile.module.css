@@ -15,9 +15,14 @@
 	justify-content: center;
 }
 
-.Nickname {
+.UsernameInput {
+	color: #ffffff;
 	display: flex;
 	font-size: 2vh;
+	background: 0;
+	border: 0;
+	outline: 0;
+	text-align: center;
 }
 
 .avatarUploader {

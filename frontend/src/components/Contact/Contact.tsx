@@ -6,15 +6,17 @@ export function Contact(props: any) {
 		<li className={classes.Contact}>
 			<div
 				className={classes.avatar}
-				style={{ backgroundImage: `url(${props.avatar})` }}
+				style={{
+					backgroundImage: `url(http://localhost/uploads/avatars/${props.avatar})`,
+				}}
 			/>
 			<div className={classes.text}>
-				<p className={classes.nickname}>
-					{props.nickname !== '' ? props.nickname : props.email}
+				<p className={classes.username}>
+					{props.username !== '' ? props.username : props.email}
 				</p>
 				{props.email !== '' ? (
 					<p className={classes.email}>
-						{props.nickname === '' ? '' : props.email}
+						{props.username === '' ? '' : props.email}
 					</p>
 				) : (
 					''
