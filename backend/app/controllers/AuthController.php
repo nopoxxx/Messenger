@@ -71,7 +71,8 @@ class AuthController
 
     public function logout($token)
     {
-        $session = $this->sessionModel->destroy($token);
+        $userId = $this->sessionModel->check($token)["desc"];
+        $session = $this->sessionModel->destroy($userId);
         if ($session["status"] === "error") {
             Response::send(["status" => "error", "desc" => $session["desc"]]);
         }

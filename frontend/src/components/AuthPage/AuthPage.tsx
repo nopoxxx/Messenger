@@ -26,7 +26,7 @@ export function AuthPage() {
 		return <LoaderPage />
 	}
 
-	if (sessionCheck) navigate('/profile')
+	if (sessionCheck) navigate('/messenger')
 
 	const handleSubmit = async (values: Record<string, string | boolean>) => {
 		setError('')
@@ -37,7 +37,7 @@ export function AuthPage() {
 				const { email, password, nickname, hideEmail } = values
 				const response = await register(email, password, nickname, hideEmail)
 				if (response['status'] === 'ok') {
-					navigate('/profile')
+					navigate('/messenger')
 				} else {
 					setError(response['desc'])
 				}
@@ -45,7 +45,7 @@ export function AuthPage() {
 				const { email, password } = values
 				const response = await login(email as string, password as string)
 				if (response['status'] === 'ok') {
-					navigate('/profile')
+					navigate('/messenger')
 				} else {
 					setError(response['desc'])
 				}

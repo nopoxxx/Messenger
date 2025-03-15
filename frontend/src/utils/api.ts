@@ -64,7 +64,7 @@ export async function confirm(token: string) {
 	return result
 }
 
-export async function checkSession() {
+export async function checkSession(): Promise<boolean | null> {
 	const token = document.cookie
 		.split('; ')
 		.find(row => row.startsWith('token='))
@@ -84,6 +84,31 @@ export async function checkSession() {
 		document.cookie = 'token=;'
 		return false
 	}
+	return result ?? null
+}
+
+export async function logout() {
+	console.log('logout')
+	const token = document.cookie
+		.split('; ')
+		.find(row => row.startsWith('token='))
+		?.split('=')[1]
+	const response = await fetch(`${API_URL}/logout`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ token }),
+	})
+	if (!response.ok) {
+		throw new Error('Ошибка при выходе')
+	}
+
+	const result = await response.json()
+
+	if (result['status'] === 'error') {
+		return false
+	}
+
+	document.cookie = 'token=;'
 
 	return true
 }

@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { logout } from '../../utils/api'
 import Profile from '../Profile/Profile'
 import SettingsButton from '../SettingsButton/SettingsButton'
 //@ts-ignore
@@ -8,6 +10,15 @@ export function SettingsList() {
 	const [profileOpen, setProfileOpen] = useState(false)
 	const [settingsOpen, setSettingsOpen] = useState(false)
 	const [logoutOpen, setLogoutOpen] = useState(false)
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (logoutOpen) {
+			logout()
+			navigate('/auth')
+			setLogoutOpen(false)
+		}
+	}, [logoutOpen])
 
 	return (
 		<div className={classes.SettingsList}>
