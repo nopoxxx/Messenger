@@ -44,7 +44,14 @@ export function Messages(props: any) {
 	return (
 		<div className={classes.Messages}>
 			{messages.map(message => (
-				<Message key={message.id} {...message} />
+				<Message
+					key={message.id}
+					onContextMenu={(e: Event) => {
+						e.preventDefault()
+						console.log('rclick')
+					}}
+					{...message}
+				/>
 			))}
 			<div ref={messagesEndRef} />
 		</div>

@@ -55,32 +55,11 @@ class WebSocketServer implements MessageComponentInterface
                 error_log("Запрос профиля ({$conn->resourceId})\n");
                 UserController::getProfile($conn, $this->clients, $this->db);
                 break;
-            case 'getContacts':
-                ContactController::getContacts($conn, $this->clients, $this->db);
-                break;
-            case 'addContact':
-                ContactController::addContact($conn, $data['contactId'], $this->clients, $this->db);
-                break;
-            case 'deleteContact':
-                ContactController::deleteContact($conn, $data['contactId'], $this->clients, $this->db);
-                break;
             case 'sendMessage':
                 MessageController::sendMessage($conn, $data['receiverId'], $data['message'], $data['isGroup'], $this->clients, $this->db);
                 break;
             case 'getChatMessages':
                 MessageController::getChatMessages($conn, $data['contactId'], $data['isGroup'], $this->clients, $this->db);
-                break;
-            case 'deleteMessage':
-                MessageController::deleteMessage($conn, $data['messageId'], $this->clients, $this->db);
-                break;
-            case 'editMessage':
-                MessageController::editMessage($conn, $data['messageId'], $data['message'], $this->clients, $this->db);
-                break;
-            case 'createGroup':
-                GroupController::createGroup($conn, $data['groupName'], $this->clients, $this->db);
-                break;
-            case 'addGroupMember':
-                GroupController::addGroupMember($conn, $data['groupId'], $data['memberId'], $this->clients, $this->db);
                 break;
         }
     }

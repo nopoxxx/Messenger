@@ -67,7 +67,7 @@ class User
             VALUES (?, ?, ?, ?, ?, ?)
         ");
             $stmt->execute([$email, $password_hash, $username, null, $is_email_visible, 0]);
-            $result = $this->db->lastInsertId();
+            $result = [$this->db->lastInsertId(), $username ? $username : $email];
             return ["status" => "ok", "desc" => $result];
         } catch (PDOException $e) {
             error_log("Ошибка User create: " . $e->getMessage());

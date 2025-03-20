@@ -109,9 +109,8 @@ class UserController
         }
 
         $query = "SELECT id, username, email, avatar, email_visibility FROM users WHERE id != ?";
-        $params = [$userId];
         $stmt = $db->prepare($query);
-        $stmt->execute($params);
+        $stmt->execute([$userId]);
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $result = array_map(function ($user) {
@@ -127,5 +126,21 @@ class UserController
             'action' => 'getUsers',
             'data' => $result
         ]));
+    }
+
+    public static function getDisplayNameById($db, $id)
+    {
+        $query = 'SELECT 
+                    CASE 
+                        WHEN username != "" THEN username
+                        ELSE email
+                    END AS display_name
+                  FROM users
+                  WHERE id = ?;';
+        $stmt = $db->prepare($query);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result ? $result['display_name'] : null;
     }
 }
