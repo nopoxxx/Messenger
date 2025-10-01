@@ -16,7 +16,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Копируем файлы composer
-COPY composer.json composer.lock ./
+COPY composer.json ./
 
 # Устанавливаем зависимости через Composer
 RUN composer install --no-dev --optimize-autoloader

@@ -6,8 +6,6 @@ require_once __DIR__ . '/../config/database.php';
 
 require_once 'controllers/MessageController.php';
 require_once 'controllers/UserController.php';
-require_once 'controllers/ContactController.php';
-require_once 'controllers/GroupController.php';
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
